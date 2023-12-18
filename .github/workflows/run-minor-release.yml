@@ -36,6 +36,8 @@ jobs:
     if: github.event_name == 'push'
     steps:
       - uses: actions/checkout@v4
-      - run: |-
-          echo "${GITHUB_REF#refs/*/minor-}"
-          echo 'add your code'
+      - name: setup release version
+        run: |-
+          VERSION=${GITHUB_REF#refs/*/patch-}
+          echo "### patch - ${VERSION}" >> $GITHUB_STEP_SUMMARY
+      - run: echo "add your code for ${VERSION}"

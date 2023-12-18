@@ -12,7 +12,7 @@ on:
   # Alternative 2
   push:
     tags:
-      - 'minor-[0-9]+.[0-9]+.[0-9]+'
+      - 'minor-[0-9]+.[0-9]+.0'
 
 permissions:
   contents: read

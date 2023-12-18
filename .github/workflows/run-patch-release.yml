@@ -2,19 +2,40 @@
 name: run-patch-release
 
 on:
+  # Alternative 1
   workflow_dispatch:
     inputs:
       version:
         description: 'The version (semver format: major.minor.patch)'
         required: true
         type: string
+  # Alternative 2
+  push:
+    tags:
+      - 'patch-[0-9]+.[0-9]+.[0-9]+'
 
 permissions:
   contents: read
-  
+
+# Avoid concurrency so we can watch the releases correctly
+concurrency:
+  group: ${{ github.workflow }}
+
 jobs:
-  run-minor:
+  # Alternative 1
+  run-patch-dispatch:
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
     steps:
       - uses: actions/checkout@v4
       - run: echo '### patch - ${{inputs.version}} ' >> $GITHUB_STEP_SUMMARY
+
+  # Alternative 2
+  run-patch-tag:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+      - run: |-
+          echo "${GITHUB_REF#refs/*/patch-}"
+          echo 'add your code'
